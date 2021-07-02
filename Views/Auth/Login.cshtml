@@ -1,0 +1,22 @@
+@{
+    Layout=null;
+}
+
+    <form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Login">
+        <table>
+            <tr>
+                <td>Kullanıcı Adı: </td>
+                <td><input type="text" id="txtUsername" name="txtUsername"/></td>
+            </tr>
+            <tr>
+                <td>Şifre: </td>
+                <td><input type="text" id="txtPassword" name="txtPassword"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Submit"/></td>
+            </tr>
+        </table>
+    </form>
+
+    <h1>@ViewBag.Message</h1>

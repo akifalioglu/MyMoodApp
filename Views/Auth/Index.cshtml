@@ -26,7 +26,7 @@
         @{
             for(int i =0; i< ViewBag.AnswersList.Count; i++)
             {
-                <li>@ViewBag.answersList[i]</li>
+                <li><a href='/Answer?number=@ViewBag.answersListID[i]'>@ViewBag.answersList[i]</a></li>
             }
         }
     </ul>

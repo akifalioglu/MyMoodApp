@@ -18,7 +18,10 @@ namespace MoodApp.Controllers
     {
         ConnectionMysqlModel db= new ConnectionMysqlModel();
         public int questionId {get; set;}
+        public int answerId {get; set;}
         public string question {get; set;}
+        public string username {get; set;}
+        public string password {get; set;}
         public string question_priority {get; set;}
         private readonly ILogger<AuthController> _logger;
 
@@ -33,11 +36,33 @@ namespace MoodApp.Controllers
             this.getAnswers();
             return View();
         }
+        public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult Answer()
+        {
+            return View();
+        }
+        [HttpGet("Answer")] 
+        public IActionResult Answer(int number)
+        {
+            this.answerId=number;
+            ViewBag.Answer= this.getAnswerInfo().Rows[0]["answer"].ToString();
+            ViewBag.AnswerDescription= this.getAnswerInfo().Rows[0]["text"].ToString();
+            return View();
+        }
 
         public DataTable oneQuestionList()
         {
             DataTable result;
             result = db.listForDatatable("SELECT * FROM questions Limit 1");
+            return result;
+        } 
+        public DataTable oneUserList()
+        {
+            DataTable result;
+            result = db.listForDatatable("SELECT * FROM users Where username='"+this.username+"' AND password ='"+this.password+"' ");
             return result;
         }        
         public DataTable answersList(int questionId)
@@ -56,25 +81,34 @@ namespace MoodApp.Controllers
         private void getAnswers()
         {
             List<string> Answers = new List<string>();
+            List<string> AnswersID = new List<string>();
             DataTable answers= answersList(this.questionId);
             for(int i=0; i < answers.Rows.Count; i++)
             {
                 Answers.Add(answers.Rows[i]["answer"].ToString());
+                AnswersID.Add(answers.Rows[i]["id"].ToString());
             }
             ViewBag.AnswersList= Answers;
+            ViewBag.AnswersListID= AnswersID;
+        }
+        private DataTable getAnswerInfo()
+        {
+            DataTable result;
+            result = db.listForDatatable("SELECT * FROM	answers AS a LEFT JOIN answer_description as ad ON a.id=ad.answer_id Where a.id='"+this.answerId+"'");
+            return result;
         }
         
-        //[HttpPost]
-        /*public IActionResult Index(string username, string password)
+        [HttpPost]
+        public IActionResult Login(string txtUsername, string txtPassword)
         {
-            //ViewBag.Name = string.Format("Name: {0} {1} {2}", firstName, lastName,number);
-            //this.username=username;
-            //this.password=password;
-            //this.request=Request.HttpContext.ToString();
-            //this.controlAndGiveMessage();
+            this.username = txtUsername; 
+            this.password = txtPassword; 
+            ViewBag.Username=txtUsername;
+            ViewBag.Password=txtPassword;
+            this.userControl();
             return View();
         }
-        */  
+          
 
         private void controlAndGiveMessage()
         {
@@ -86,6 +120,20 @@ namespace MoodApp.Controllers
             else
             {
                 ViewBag.Message="Veritabanında henüz kayıt yok !";
+                ViewBag.Status= false;
+            }
+        }        
+        
+        private void userControl()
+        {
+            if(this.oneUserList().Rows.Count > 0)
+            {
+                ViewBag.Message = "Başarıyla giriş yapıldı..";
+                ViewBag.Status= true;
+            }
+            else
+            {
+                ViewBag.Message="Hatalı kimlik bilgileri !";
                 ViewBag.Status= false;
             }
         }
