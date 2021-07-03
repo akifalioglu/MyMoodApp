@@ -26,6 +26,7 @@ namespace MoodApp
         {
             services.AddControllersWithViews();
             services.AddMvc();
+            services.AddSession();
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +50,7 @@ namespace MoodApp
             app.UseAuthorization();
             
             app.UseAuthentication();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
@@ -67,6 +69,9 @@ namespace MoodApp
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Auth}/{action=Login}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Auth}/{action=Dashboard}/{id?}");
                     
             });
         }

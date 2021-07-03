@@ -9,6 +9,7 @@ using MoodApp.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Text;
 
 
 
@@ -37,6 +38,10 @@ namespace MoodApp.Controllers
             return View();
         }
         public IActionResult Login()
+        {
+            return View();
+        }        
+        public IActionResult Dashboard()
         {
             return View();
         }
@@ -102,11 +107,17 @@ namespace MoodApp.Controllers
         public IActionResult Login(string txtUsername, string txtPassword)
         {
             this.username = txtUsername; 
-            this.password = txtPassword; 
-            ViewBag.Username=txtUsername;
-            ViewBag.Password=txtPassword;
-            this.userControl();
-            return View();
+            this.password = txtPassword;
+
+
+            if(this.userControl()==true)
+            {
+                return Redirect("Dashboard");
+            }
+            else
+            {
+                return View();
+            }
         }
           
 
@@ -124,17 +135,26 @@ namespace MoodApp.Controllers
             }
         }        
         
-        private void userControl()
+        private bool userControl()
         {
             if(this.oneUserList().Rows.Count > 0)
             {
                 ViewBag.Message = "Başarıyla giriş yapıldı..";
                 ViewBag.Status= true;
+                //Session için bytes formatına dönüştürmek
+            
+                var usernameToByte = Encoding.UTF8.GetBytes(this.username);
+                HttpContext.Session.Set("ses_username",usernameToByte);
+
+                var passwordToByte = Encoding.UTF8.GetBytes(this.password);
+                HttpContext.Session.Set("ses_password",passwordToByte);
+                return ViewBag.Status;
             }
             else
             {
                 ViewBag.Message="Hatalı kimlik bilgileri !";
                 ViewBag.Status= false;
+                return ViewBag.Status;
             }
         }
     }
