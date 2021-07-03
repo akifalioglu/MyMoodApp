@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "p1C6Vl8lJKdrj9wzM7n6hr3XqZ2rDqs+W/k1qSnKdck6LUNsZAp1AJ6uGbwIRO9ZEqugyY7Ce4ldlDD+sI8jpQ==",
+  "dgSpecHash": "ruIXCAOFv8RUKumEsIR2ojT6gdEp60ysHrJcSUTU50lh2DMzXVE5nUDXorxGJFOcMzyPQ02S4ax6WBZQvXR0qA==",
   "success": true,
   "projectFilePath": "/var/www/MoodApp/MoodApp.csproj",
   "expectedPackageFiles": [
@@ -22,6 +22,7 @@
     "/home/akif/.nuget/packages/microsoft.aspnetcore.http.abstractions/2.2.0/microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
     "/home/akif/.nuget/packages/microsoft.aspnetcore.http.extensions/2.2.0/microsoft.aspnetcore.http.extensions.2.2.0.nupkg.sha512",
     "/home/akif/.nuget/packages/microsoft.aspnetcore.http.features/2.2.0/microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
+    "/home/akif/.nuget/packages/microsoft.aspnetcore.session/2.2.0/microsoft.aspnetcore.session.2.2.0.nupkg.sha512",
     "/home/akif/.nuget/packages/microsoft.aspnetcore.webutilities/2.2.0/microsoft.aspnetcore.webutilities.2.2.0.nupkg.sha512",
     "/home/akif/.nuget/packages/microsoft.entityframeworkcore/5.0.7/microsoft.entityframeworkcore.5.0.7.nupkg.sha512",
     "/home/akif/.nuget/packages/microsoft.entityframeworkcore.abstractions/5.0.7/microsoft.entityframeworkcore.abstractions.5.0.7.nupkg.sha512",

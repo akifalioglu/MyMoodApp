@@ -58,3 +58,4 @@
 /var/www/MoodApp/bin/Debug/net5.0/System.Diagnostics.DiagnosticSource.dll
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Auth/Answer.cshtml.g.cs
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Auth/Login.cshtml.g.cs
+/var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Auth/Dashboard.cshtml.g.cs
