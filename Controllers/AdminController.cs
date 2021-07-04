@@ -21,9 +21,7 @@ namespace MoodApp.Controllers
         {
             DataTable dtb = new DataTable();
             dtb.Rows.Add("Dashboard","1");
-
             return dtb;
-
         }
     }
 }
