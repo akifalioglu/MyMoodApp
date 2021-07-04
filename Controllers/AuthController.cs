@@ -10,23 +10,25 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Text;
-
-
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace MoodApp.Controllers
 {
     public class AuthController : Controller
     {
         ConnectionMysqlModel db= new ConnectionMysqlModel();
+        private readonly ILogger<HomeController> _logger;
         public int questionId {get; set;}
         public int answerId {get; set;}
+        public int userId {get; set;}
         public string question {get; set;}
         public string username {get; set;}
         public string password {get; set;}
+        public int role {get; set;}
         public string question_priority {get; set;}
-        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(ILogger<AuthController> logger)
+        public AuthController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
@@ -112,6 +114,10 @@ namespace MoodApp.Controllers
 
             if(this.userControl()==true)
             {
+                DataRow user=this.oneUserList().Rows[0];
+                this.role= Convert.ToInt32( user["role"] );
+                this.userId=Convert.ToInt32( user["id"] );
+                this.setSessions(("id",this.userId),("role",this.role),("username",this.username));
                 return Redirect("Dashboard");
             }
             else
@@ -139,15 +145,7 @@ namespace MoodApp.Controllers
         {
             if(this.oneUserList().Rows.Count > 0)
             {
-                ViewBag.Message = "Başarıyla giriş yapıldı..";
                 ViewBag.Status= true;
-                //Session için bytes formatına dönüştürmek
-            
-                var usernameToByte = Encoding.UTF8.GetBytes(this.username);
-                HttpContext.Session.Set("ses_username",usernameToByte);
-
-                var passwordToByte = Encoding.UTF8.GetBytes(this.password);
-                HttpContext.Session.Set("ses_password",passwordToByte);
                 return ViewBag.Status;
             }
             else
@@ -156,6 +154,30 @@ namespace MoodApp.Controllers
                 ViewBag.Status= false;
                 return ViewBag.Status;
             }
+        }
+        private void setSessions(params (string name, object content)[] sessionName)
+            {
+                string key;
+                string value;
+
+                foreach (var setSession in sessionName)
+                {
+                    value= setSession.content.ToString();
+                    key = "ses_"+ setSession.name;
+                    HttpContext.Session.SetString(key,value);
+                }                
+
+
+            }
+        public void accesPagesAdmin()
+        {
+            DataTable result;
+            result = db.listForDatatable("SELECT * FROM page_access");
+            for(int i=0 ; i < result.Rows.Count; i++)
+            {
+            }
+            //string json = JsonConvert.SerializeObject(HttpContext.Current.Request.Url.AbsoluteUri, Formatting.Indented);
+            Console.WriteLine(ControllerContext.ActionDescriptor.ActionName);
         }
     }
 }

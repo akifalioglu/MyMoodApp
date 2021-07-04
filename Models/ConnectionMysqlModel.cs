@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Diagnostics;
 
 namespace MoodApp.Models
 {
@@ -29,9 +30,9 @@ namespace MoodApp.Models
             database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
 
             connection = new MySqlConnection(connectionString);
-
             return connection;
         }
+
         public DataTable listForDatatable(string sorgu)
         {
             this.connectionGenerator().Open();

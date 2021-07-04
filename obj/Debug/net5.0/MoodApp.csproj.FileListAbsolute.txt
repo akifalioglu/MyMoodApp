@@ -59,3 +59,5 @@
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Auth/Answer.cshtml.g.cs
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Auth/Login.cshtml.g.cs
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Auth/Dashboard.cshtml.g.cs
+/var/www/MoodApp/bin/Debug/net5.0/Newtonsoft.Json.dll
+/var/www/MoodApp/bin/Debug/net5.0/ObjectDumping.dll
