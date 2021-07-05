@@ -12,7 +12,7 @@
         
 
         inputElement.type = 'text';
-        inputElement.id = 'txtOption'+sayac;
+        inputElement.name = 'txtOption'+sayac;
         inputElement.placeholder = 'Seçenek...';
         inputElement.className ='ssss';
 
@@ -22,7 +22,7 @@
         buttonElement.setAttribute("onClick", `deleteElement(${sayac})`);
 
 
-        textareaElement.id="txtDescription"+sayac;
+        textareaElement.name="txtDescription"+sayac;
         textareaElement.placeholder="Açıklama...";
         
         hrElement.id="hr"+sayac;
@@ -49,6 +49,7 @@
             Soru: <br>
             <textarea name="txtQuestion">Soruyu yazınız....</textarea><button type="button" onclick="addInput()" name="btnAdd">*Seçenek Ekle*</button>
             <br>
-            <div id ="container"></div>
+            <div id="container"></div>
             <input type="submit" value="Submit"/>
+            
 </form>

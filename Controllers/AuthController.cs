@@ -19,14 +19,14 @@ namespace MoodApp.Controllers
     {
         ConnectionMysqlModel db= new ConnectionMysqlModel();
         private readonly ILogger<HomeController> _logger;
-        public int questionId {get; set;}
-        public int answerId {get; set;}
-        public int userId {get; set;}
-        public string question {get; set;}
-        public string username {get; set;}
-        public string password {get; set;}
-        public int role {get; set;}
-        public string question_priority {get; set;}
+        private int questionId {get; set;}
+        private int answerId {get; set;}
+        private int userId {get; set;}
+        private string question {get; set;}
+        private string username {get; set;}
+        private string password {get; set;}
+        private int role {get; set;}
+        private string question_priority {get; set;}
 
         public AuthController(ILogger<HomeController> logger)
         {
@@ -45,6 +45,32 @@ namespace MoodApp.Controllers
         }        
         public IActionResult Dashboard()
         {
+            if (this.accesPagesAdmin()==true)
+                return View();
+            else
+                this.setSessions(("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return Redirect("Login");
+        }
+
+        [HttpPost]
+
+        public IActionResult Dashboard(IFormCollection formCollection)
+        {
+            List<string> txtOption = new List<string>();
+            List<string> txtDescription = new List<string>();
+            foreach(var form in formCollection)
+            {
+                Console.WriteLine(form.Key);
+                if(form.Key.Contains("txtOption")==true)
+                {
+                    txtOption.Add(form.Key);
+                }
+
+                if(form.Value.Contains("txtDescription")==true)
+                {
+                    txtDescription.Add(form.Value);
+                }
+            }
             return View();
         }
         public IActionResult Answer()
@@ -55,24 +81,27 @@ namespace MoodApp.Controllers
         public IActionResult Answer(int number)
         {
             this.answerId=number;
-            ViewBag.Answer= this.getAnswerInfo().Rows[0]["answer"].ToString();
-            ViewBag.AnswerDescription= this.getAnswerInfo().Rows[0]["text"].ToString();
-            return View();
+            if(this.getAnswerInfo().Rows.Count>0)
+            {
+                ViewBag.Answer= this.getAnswerInfo().Rows[0]["answer"].ToString();
+                ViewBag.AnswerDescription= this.getAnswerInfo().Rows[0]["text"].ToString();
+            }
+                return View();
         }
 
-        public DataTable oneQuestionList()
+        private DataTable oneQuestionList()
         {
             DataTable result;
             result = db.listForDatatable("SELECT * FROM questions Limit 1");
             return result;
         } 
-        public DataTable oneUserList()
+        private DataTable oneUserList()
         {
             DataTable result;
             result = db.listForDatatable("SELECT * FROM users Where username='"+this.username+"' AND password ='"+this.password+"' ");
             return result;
         }        
-        public DataTable answersList(int questionId)
+        private DataTable answersList(int questionId)
         {
             DataTable result;
             result = db.listForDatatable("SELECT * FROM answers WHERE question_id ='"+questionId+"' ORDER BY answer_priority ASC");
@@ -169,15 +198,25 @@ namespace MoodApp.Controllers
 
 
             }
-        public void accesPagesAdmin()
+        private bool accesPagesAdmin()
         {
             DataTable result;
             result = db.listForDatatable("SELECT * FROM page_access");
+            string pageName = HttpContext.Request.Path;
+            Console.WriteLine(pageName);
             for(int i=0 ; i < result.Rows.Count; i++)
             {
+
+                if(pageName==result.Rows[i]["page_name"].ToString())
+                {
+                    if(Convert.ToInt32( HttpContext.Session.GetString("ses_role") ) != Convert.ToInt32( result.Rows[i]["role_id"]))
+                    {
+                        return false;
+                    }
+                }
             }
-            //string json = JsonConvert.SerializeObject(HttpContext.Current.Request.Url.AbsoluteUri, Formatting.Indented);
-            Console.WriteLine(ControllerContext.ActionDescriptor.ActionName);
+            return true;
         }
+
     }
 }
