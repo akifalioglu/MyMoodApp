@@ -1,12 +1,15 @@
+    @using Microsoft.AspNetCore.Http;
     <form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Login">
         <table>
+            <h4>@Context.Session.GetString("ses_errorMesssage") </h4>
+            <br>
             <tr>
                 <td>Kullanıcı Adı: </td>
-                <td><input type="text" id="txtUsername" name="txtUsername"/></td>
+                <td><input type="text" id="txtUsername" name="txtUsername" value="akif"/></td>
             </tr>
             <tr>
                 <td>Şifre: </td>
-                <td><input type="text" id="txtPassword" name="txtPassword"/></td>
+                <td><input type="text" id="txtPassword" name="txtPassword" value="akif"/></td>
             </tr>
             <tr>
                 <td></td>

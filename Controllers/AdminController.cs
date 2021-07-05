@@ -10,18 +10,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 
 
 namespace MoodApp.Controllers
 {
-    public class AdminController : Controller
+    public static class AdminController 
     {
-        public DataTable accesPagesAdmin()
-        {
-            DataTable dtb = new DataTable();
-            dtb.Rows.Add("Dashboard","1");
-            return dtb;
-        }
+        private static int tets { get; set; }
+
     }
 }
