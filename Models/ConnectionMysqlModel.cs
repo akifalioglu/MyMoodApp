@@ -18,7 +18,8 @@ namespace MoodApp.Models
         private string database;
         private string uid;
         private string password;
-
+        public long lastInsertedId { get; set; }
+        public MySqlTransaction mySqlTransaction {get; set;}
         public MySqlConnection connectionGenerator ()
         {
             server = "127.0.0.1";
@@ -33,14 +34,47 @@ namespace MoodApp.Models
             return connection;
         }
 
-        public DataTable listForDatatable(string sorgu)
+        public DataTable listForDatatable(string query)
         {
             this.connectionGenerator().Open();
-            MySqlDataAdapter adap = new MySqlDataAdapter(sorgu, this.connectionGenerator());
+            MySqlDataAdapter adap = new MySqlDataAdapter(query, this.connectionGenerator());
             DataTable dtb = new DataTable();
             adap.Fill(dtb);
             this.connectionGenerator().Close();
             return dtb;
+        }
+        public int insertUpdateDelete(string query)
+        {
+            MySqlConnection connection = this.connectionGenerator();
+            connection.Open();
+            MySqlCommand mySqlCommand = new MySqlCommand(query, connection);
+            int mod;
+            mod= mySqlCommand.ExecuteNonQuery();
+            this.lastInsertedId = mySqlCommand.LastInsertedId;
+            connection.Close();
+            return mod;
+        }
+        public void startTransaction()
+        {
+            MySqlConnection connection = this.connectionGenerator();
+            connection.Open();
+            MySqlTransaction mySqlTransaction;
+            mySqlTransaction= connection.BeginTransaction();
+            MySqlCommand mySqlCommand=connection.CreateCommand();
+            mySqlCommand.Transaction=mySqlTransaction;
+            this.mySqlTransaction=mySqlTransaction;
+        }
+        public void stopTransaction(Exception error)
+        {
+           MySqlConnection connection = this.connectionGenerator();
+           connection.Open();
+           if(error.Message is string)
+            {
+                Console.WriteLine("hata bulundu");
+                //İşlemler geri alındı
+                this.mySqlTransaction.Rollback();
+                connection.Close();
+            }
         }
     } 
 }

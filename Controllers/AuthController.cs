@@ -26,7 +26,7 @@ namespace MoodApp.Controllers
         private string username {get; set;}
         private string password {get; set;}
         private int role {get; set;}
-        private string question_priority {get; set;}
+        private int questionPriority {get; set;}
 
         public AuthController(ILogger<HomeController> logger)
         {
@@ -58,18 +58,41 @@ namespace MoodApp.Controllers
         {
             List<string> txtOption = new List<string>();
             List<string> txtDescription = new List<string>();
+            int counter=0;
+            int emptyValue=0;
             foreach(var form in formCollection)
             {
                 Console.WriteLine(form.Key);
                 if(form.Key.Contains("txtOption")==true)
                 {
-                    txtOption.Add(form.Key);
+                    counter++;
+                    txtOption.Add(form.Value);
                 }
-
-                if(form.Value.Contains("txtDescription")==true)
+                                
+                if(form.Key.Contains("txtDescription")==true)
                 {
+                    counter++;
                     txtDescription.Add(form.Value);
                 }
+
+                if(form.Value==string.Empty)
+                {
+                    emptyValue++;
+                }
+            }
+                            
+            if(emptyValue>0)
+            {
+                ViewBag.Message ="Tüm alanları doldurunuz";
+            }
+            else if(counter < 4 )
+            {
+                ViewBag.Message="En az iki seçenek seçilmelidir.";
+            }
+            else
+            {
+                this.question=formCollection["txtQuestion"];
+                this.addQuestionAndOptions(txtOption,txtDescription);
             }
             return View();
         }
@@ -107,12 +130,18 @@ namespace MoodApp.Controllers
             result = db.listForDatatable("SELECT * FROM answers WHERE question_id ='"+questionId+"' ORDER BY answer_priority ASC");
             return result;
         }
-
+        private DataTable getAnswerInfo()
+        {
+            DataTable result;
+            result = db.listForDatatable("SELECT * FROM	answers AS a LEFT JOIN answer_description as ad ON a.id=ad.answer_id Where a.id='"+this.answerId+"'");
+            return result;
+        }
         private void getQuestion()
         {
             this.questionId= Convert.ToInt32(oneQuestionList().Rows[0]["id"]);
             this.question= oneQuestionList().Rows[0]["question"].ToString();
-            this.question_priority= oneQuestionList().Rows[0]["question_priority"].ToString();
+            this.questionPriority=  Convert.ToInt32(oneQuestionList().Rows[0]["question_priority"]);
+            ViewBag.Question= this.question;
         }
         private void getAnswers()
         {
@@ -127,12 +156,7 @@ namespace MoodApp.Controllers
             ViewBag.AnswersList= Answers;
             ViewBag.AnswersListID= AnswersID;
         }
-        private DataTable getAnswerInfo()
-        {
-            DataTable result;
-            result = db.listForDatatable("SELECT * FROM	answers AS a LEFT JOIN answer_description as ad ON a.id=ad.answer_id Where a.id='"+this.answerId+"'");
-            return result;
-        }
+
         
         [HttpPost]
         public IActionResult Login(string txtUsername, string txtPassword)
@@ -217,6 +241,37 @@ namespace MoodApp.Controllers
             }
             return true;
         }
+
+        private void addQuestionAndOptions(List<string> txtOption, List<string> txtDescription)
+        {
+            db.startTransaction();
+            try
+            {
+
+                db.insertUpdateDelete("INSERT INTO questions (question, question_priority) VALUES ('"+this.question+"', "+this.questionPriority+")");
+                long id = db.lastInsertedId;
+                Console.WriteLine(id);
+                //Dictionary<string, string> openWith = new Dictionary<string, string>();
+                int answer_priority= 1;
+                for (var i=0; i<txtOption.Count;i++)
+                {
+                    db.insertUpdateDelete("INSERT INTO answers (question_id, answer, answer_priority) VALUES ("+id+", '"+txtOption[i]+"', "+answer_priority+")");
+                    db.insertUpdateDelete("INSERT INTO answer_description (text, answer_id) VALUES ('"+txtDescription[i]+"', "+db.lastInsertedId+")");
+                    answer_priority++;
+                }
+
+                //İşlem başarılı
+                db.mySqlTransaction.Commit();
+                ViewBag.Message = "Başarıyla eklendi...";
+
+            }
+            catch(Exception err)
+            {
+                db.stopTransaction(err);
+                ViewBag.Message = "Eklenirken hata oluştu.. Hata mesajı : "+err.Message;
+            }
+        }
+
 
     }
 }
