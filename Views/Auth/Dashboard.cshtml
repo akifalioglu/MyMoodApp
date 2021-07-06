@@ -13,6 +13,7 @@
 
         inputElement.type = 'text';
         inputElement.name = 'txtOption'+sayac;
+        inputElement.id = 'txtOption'+sayac;
         inputElement.placeholder = 'Seçenek...';
         inputElement.className ='ssss';
 
@@ -23,6 +24,7 @@
 
 
         textareaElement.name="txtDescription"+sayac;
+        textareaElement.id="txtDescription"+sayac;
         textareaElement.placeholder="Açıklama...";
         
         hrElement.id="hr"+sayac;
@@ -45,6 +47,12 @@
 
 
 </script>   
+@{
+    if(ViewBag.Message != string.Empty)
+    {
+        <h2>@ViewBag.Message</h2>
+    }
+}
 <form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Dashboard">
             Soru: <br>
             <textarea name="txtQuestion">Soruyu yazınız....</textarea><button type="button" onclick="addInput()" name="btnAdd">*Seçenek Ekle*</button>
