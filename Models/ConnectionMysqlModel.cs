@@ -67,7 +67,6 @@ namespace MoodApp.Models
         public void stopTransaction(Exception error)
         {
            MySqlConnection connection = this.connectionGenerator();
-           connection.Open();
            if(error.Message is string)
             {
                 Console.WriteLine("hata bulundu");

@@ -1,0 +1,34 @@
+
+<script>
+</script>
+@using Microsoft.AspNetCore.Http;
+<h2>İşlem yapılacak kaydı seçiniz.</h2>
+<h3>
+@{
+    if (Context.Session.GetString("ses_errorMesssage") is String)
+    {
+        Context.Session.GetString("ses_errorMesssage");
+        Context.Session.Remove("ses_errorMesssage");
+    }
+    else if (Context.Session.GetString("ses_succesMesssage") is String)
+    {
+        Context.Session.GetString("ses_succesMesssage");
+        Context.Session.Remove("ses_succesMesssage");
+    }  
+}
+</h3>
+<ul>
+    @{  if (ViewBag.Questions.Rows.Count>0)
+        {
+            for(int i =0; i< ViewBag.Questions.Rows.Count; i++)
+            {
+                <li>@ViewBag.Questions.Rows[i]["question"]...<a href="/Auth/Update/delete/@ViewBag.Questions.Rows[i]["id"]" >| Sil </a><a href="/Auth/UpdateQuestion/@ViewBag.Questions.Rows[i]["id"]">| Düzenle |</a></li>
+            }
+        }
+        else
+        {
+            <li>Henüz kayıt mevcut değil... <a href="/Auth/Add">Eklemek için tıklayın...</a></li>
+        }
+
+    }
+</ul>
