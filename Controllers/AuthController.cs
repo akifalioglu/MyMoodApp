@@ -27,10 +27,12 @@ namespace MoodApp.Controllers
         private string password {get; set;}
         private int role {get; set;}
         private int questionPriority {get; set;}
+        public bool functionStatus { get; set; }
 
         public AuthController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            this.functionStatus=false;
         }
         public IActionResult Index()
         {
@@ -51,49 +53,86 @@ namespace MoodApp.Controllers
                 this.setSessions(("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
                 return Redirect("Login");
         }
-
-        [HttpPost]
-
-        public IActionResult Dashboard(IFormCollection formCollection)
+        public IActionResult Add()
         {
-            List<string> txtOption = new List<string>();
-            List<string> txtDescription = new List<string>();
-            int counter=0;
-            int emptyValue=0;
-            foreach(var form in formCollection)
+            if (this.accesPagesAdmin()==true)
             {
-                Console.WriteLine(form.Key);
-                if(form.Key.Contains("txtOption")==true)
-                {
-                    counter++;
-                    txtOption.Add(form.Value);
-                }
-                                
-                if(form.Key.Contains("txtDescription")==true)
-                {
-                    counter++;
-                    txtDescription.Add(form.Value);
-                }
-
-                if(form.Value==string.Empty)
-                {
-                    emptyValue++;
-                }
-            }
-                            
-            if(emptyValue>0)
-            {
-                ViewBag.Message ="Tüm alanları doldurunuz";
-            }
-            else if(counter < 4 )
-            {
-                ViewBag.Message="En az iki seçenek seçilmelidir.";
+                return View();
             }
             else
+                this.setSessions(("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return Redirect("Login");
+        }
+        public IActionResult Update()
+        {
+            if (this.accesPagesAdmin()==true)
             {
-                this.question=formCollection["txtQuestion"];
-                this.addQuestionAndOptions(txtOption,txtDescription);
+                this.questionsList();
+                return View();
             }
+            else
+                this.setSessions(("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return Redirect("Login");
+        }
+        [HttpGet("{controller=Auth}/{action=Update}/{delete}/{id?}")] 
+        public IActionResult Update(int id)
+        {
+            this.questionsList();
+            this.questionId=id;
+            string getAction = HttpContext.Request.Path.ToUriComponent().Split('/')[3];
+            if(getAction=="delete")
+            {
+                if(this.deleteQuestionsAndOptions()>0)
+                {
+                    this.setSessions(("succesMesssage","Başarıyla silindi "));
+                    Response.Redirect("/Auth/Update");
+                }
+                else
+                {
+                    this.setSessions(("errorMesssage","Böyle bir kayıt yok ! "));
+                    Response.Redirect("/Auth/Update");
+                }
+            }
+            else if (getAction=="update")
+            {
+                Response.Redirect("/Auth/UpdateQuestion/update/"+id);
+            }
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult Add(IFormCollection formCollection)
+        {
+            insertAnswerAndQuestion(formCollection);
+            return View();
+        }
+        [HttpGet("{controller=Auth}/{action=UpdateQuestion}")] 
+        public IActionResult UpdateQuestion()
+        {
+            ViewBag.Message="Bu sayfaya parametresiz erişilemez ";
+            return View();
+        }
+
+        [HttpGet("{controller=Auth}/{action=UpdateQuestion}/{id?}")] 
+        public IActionResult UpdateQuestion(int id)
+        {
+            this.questionId=id;
+            ViewBag.QuestionList = this.listQuestionsAndOptions();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UpdateQuestion(IFormCollection formCollection,int id)
+        {
+            this.questionId=id;
+            insertAnswerAndQuestion(formCollection);            
+            if(this.functionStatus==true)
+            {
+                Console.WriteLine(this.questionId+" ... id");
+                deleteQuestionsAndOptions();
+            }
+
             return View();
         }
         public IActionResult Answer()
@@ -112,6 +151,7 @@ namespace MoodApp.Controllers
                 return View();
         }
 
+
         private DataTable oneQuestionList()
         {
             DataTable result;
@@ -129,6 +169,15 @@ namespace MoodApp.Controllers
             DataTable result;
             result = db.listForDatatable("SELECT * FROM answers WHERE question_id ='"+questionId+"' ORDER BY answer_priority ASC");
             return result;
+        }        
+        private DataTable questionsList()
+        {
+            DataTable result;
+            result = db.listForDatatable("SELECT * FROM questions ORDER BY question_priority ASC");
+            ///List<string> test = new List<string>();
+            //IEnumerable<DataRow> dtToList= result.AsEnumerable();
+            ViewBag.Questions= result;
+            return result;
         }
         private DataTable getAnswerInfo()
         {
@@ -138,10 +187,17 @@ namespace MoodApp.Controllers
         }
         private void getQuestion()
         {
-            this.questionId= Convert.ToInt32(oneQuestionList().Rows[0]["id"]);
-            this.question= oneQuestionList().Rows[0]["question"].ToString();
-            this.questionPriority=  Convert.ToInt32(oneQuestionList().Rows[0]["question_priority"]);
-            ViewBag.Question= this.question;
+            if(this.oneQuestionList().Rows.Count>0)
+            {
+                this.questionId= Convert.ToInt32(oneQuestionList().Rows[0]["id"]);
+                this.question= oneQuestionList().Rows[0]["question"].ToString();
+                this.questionPriority=  Convert.ToInt32(oneQuestionList().Rows[0]["question_priority"]);
+                ViewBag.Question= this.question;
+            }
+            else
+            {
+                ViewBag.Message="Henüz kayıt yok";
+            }
         }
         private void getAnswers()
         {
@@ -251,7 +307,6 @@ namespace MoodApp.Controllers
                 db.insertUpdateDelete("INSERT INTO questions (question, question_priority) VALUES ('"+this.question+"', "+this.questionPriority+")");
                 long id = db.lastInsertedId;
                 Console.WriteLine(id);
-                //Dictionary<string, string> openWith = new Dictionary<string, string>();
                 int answer_priority= 1;
                 for (var i=0; i<txtOption.Count;i++)
                 {
@@ -263,7 +318,7 @@ namespace MoodApp.Controllers
                 //İşlem başarılı
                 db.mySqlTransaction.Commit();
                 ViewBag.Message = "Başarıyla eklendi...";
-
+                this.functionStatus=true;
             }
             catch(Exception err)
             {
@@ -271,7 +326,56 @@ namespace MoodApp.Controllers
                 ViewBag.Message = "Eklenirken hata oluştu.. Hata mesajı : "+err.Message;
             }
         }
+        private int deleteQuestionsAndOptions()
+        {
+            return db.insertUpdateDelete("DELETE questions,answers,answer_description  FROM questions LEFT JOIN answers ON questions.id=answers.question_id LEFT JOIN answer_description ON answer_description.answer_id= answers.id Where questions.id="+this.questionId+"");
+        }
+        private DataTable listQuestionsAndOptions()
+        {
+            return db.listForDatatable("SELECT * FROM questions LEFT JOIN answers ON questions.id=answers.question_id LEFT JOIN answer_description ON answer_description.answer_id= answers.id Where questions.id="+this.questionId+"");
+        }
 
+        public void insertAnswerAndQuestion(IFormCollection formCollection)
+        {
+            List<string> txtOption = new List<string>();
+            List<string> txtDescription = new List<string>();
+            int counter=0;
+            int emptyValue=0;
+            foreach(var form in formCollection)
+            {
+                Console.WriteLine(form.Key);
+                if(form.Key.Contains("txtOption")==true)
+                {
+                    counter++;
+                    txtOption.Add(form.Value);
+                }
+                                
+                if(form.Key.Contains("txtDescription")==true)
+                {
+                    counter++;
+                    txtDescription.Add(form.Value);
+                }
+
+                if(form.Value==string.Empty)
+                {
+                    emptyValue++;
+                }
+            }
+                            
+            if(emptyValue>0)
+            {
+                ViewBag.Message ="Tüm alanları doldurunuz";
+            }
+            else if(counter < 4 )
+            {
+                ViewBag.Message="En az iki seçenek seçilmelidir.";
+            }
+            else
+            {
+                this.question=formCollection["txtQuestion"];
+                this.addQuestionAndOptions(txtOption,txtDescription);
+            }
+        }
 
     }
 }

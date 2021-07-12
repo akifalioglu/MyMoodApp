@@ -74,7 +74,12 @@ namespace MoodApp
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Auth}/{action=Dashboard}/{id?}");
-                    
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Auth}/{action=Update}/{regex([A-z])}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Auth}/{action=UpdateQuestion}/{regex([A-z])}/{id?}");
             });
         }
     }

@@ -15619,6 +15619,11 @@
   "RootNamespace": "MoodApp",
   "Documents": [
     {
+      "FilePath": "/var/www/MoodApp/Views/Auth/Update.cshtml",
+      "TargetPath": "Views\\Auth\\Update.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/var/www/MoodApp/Views/Shared/Error.cshtml",
       "TargetPath": "Views\\Shared\\Error.cshtml",
       "FileKind": "mvc"
@@ -15639,6 +15644,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/var/www/MoodApp/Views/Auth/UpdateQuestion.cshtml",
+      "TargetPath": "Views\\Auth\\UpdateQuestion.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/var/www/MoodApp/Views/Home/Privacy.cshtml",
       "TargetPath": "Views\\Home\\Privacy.cshtml",
       "FileKind": "mvc"
@@ -15651,6 +15661,11 @@
     {
       "FilePath": "/var/www/MoodApp/Views/Auth/Answer.cshtml",
       "TargetPath": "Views\\Auth\\Answer.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/var/www/MoodApp/Views/Auth/Add.cshtml",
+      "TargetPath": "Views\\Auth\\Add.cshtml",
       "FileKind": "mvc"
     },
     {
