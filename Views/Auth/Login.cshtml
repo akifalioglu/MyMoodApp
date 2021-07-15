@@ -2,6 +2,12 @@
     <form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Login">
         <table>
             <h4>@Context.Session.GetString("ses_errorMesssage") </h4>
+            <h4>@Context.Session.GetString("ses_succesMesssage") </h4>
+            @{
+                Context.Session.Remove("ses_errorMesssage");
+                Context.Session.Remove("ses_succesMesssage");
+            }
+
             <br>
             <tr>
                 <td>Kullanıcı Adı: </td>

@@ -22,12 +22,12 @@
         {
             for(int i =0; i< ViewBag.Questions.Rows.Count; i++)
             {
-                <li>@ViewBag.Questions.Rows[i]["question"]...<a href="/Auth/Update/delete/@ViewBag.Questions.Rows[i]["id"]" >| Sil </a><a href="/Auth/UpdateQuestion/@ViewBag.Questions.Rows[i]["id"]">| Düzenle |</a></li>
+                <li>@ViewBag.Questions.Rows[i]["question"]...<a href="/Question/Update/delete/@ViewBag.Questions.Rows[i]["id"]" >| Sil </a><a href="/Question/UpdateQuestion/@ViewBag.Questions.Rows[i]["id"]">| Düzenle |</a></li>
             }
         }
         else
         {
-            <li>Henüz kayıt mevcut değil... <a href="/Auth/Add">Eklemek için tıklayın...</a></li>
+            <li>Henüz kayıt mevcut değil... <a href="/Question/Add">Eklemek için tıklayın...</a></li>
         }
 
     }
