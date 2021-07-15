@@ -1,0 +1,81 @@
+<script>
+        var sayac=0;
+    function addInput()
+    {
+        sayac=sayac+1;
+        var hrElement= document.createElement('hr')
+        var brElement= document.createElement('br')
+        var inputElement = document.createElement('input');
+        var buttonElement = document.createElement('input');
+        var textareaElement = document.createElement('textarea');
+        
+
+        inputElement.type = 'text';
+        inputElement.name = 'txtOption'+sayac;
+        inputElement.id = 'txtOption'+sayac;
+        inputElement.placeholder = 'Seçenek...';
+        inputElement.className ='ssss';
+
+        buttonElement.type="button";
+        buttonElement.id="btn"+sayac;
+        buttonElement.value="*Sil*";
+        buttonElement.setAttribute("onClick", `deleteElement(${sayac})`);
+
+
+        textareaElement.name="txtDescription"+sayac;
+        textareaElement.id="txtDescription"+sayac;
+        textareaElement.placeholder="Açıklama...";
+        
+        hrElement.id="hr"+sayac;
+        brElement.class="br"+sayac;
+        var container = document.getElementById('container');
+
+
+        container.appendChild(inputElement);
+        container.appendChild(textareaElement);
+        container.appendChild(buttonElement);
+        container.appendChild(brElement);
+        container.appendChild(hrElement);
+    }
+
+    function deleteElement(id)
+    {
+        var btnDelete=  document.getElementById("btn"+id).remove();
+        document.getElementById("txtDescription"+id).remove();
+        document.getElementById("txtOption"+id).remove();
+    }
+</script>
+<form method="post" enctype="multipart/form-data" asp-controller="Question" asp-action="UpdateQuestion">
+
+@{
+if(ViewBag.QuestionList is not null)
+{
+    if(ViewBag.QuestionList.Rows.Count==0)
+    {
+        ViewBag.Message="Böyle bir kayıt yok...";
+    }
+    else
+    {
+        <textarea name="txtQuestion">@ViewBag.QuestionList.Rows[0]["question"]</textarea><button type="button" onclick="addInput()" name="btnAdd">*Seçenek Ekle*</button><br>
+        string optName;
+        string btnName;
+        string dscName;
+        int sayac=1;
+        for (int i = 0; i < ViewBag.QuestionList.Rows.Count; i++)
+        {
+            optName="txtOption"+@sayac;
+            dscName="txtDescription"+@sayac;
+            btnName="btn"+@sayac;
+            <input type="text" name="@optName" id="@optName" placeholder="Seçenek..." value="@ViewBag.QuestionList.Rows[i]["answer"]"><br>
+            <textarea name="@dscName" id="@dscName" placeholder="Açıklama...">@ViewBag.QuestionList.Rows[i]["text"]</textarea><br>
+            <input type="button" id="@btnName" value="*Sil*" onclick="deleteElement(@i)"><hr>
+            sayac++;
+        }
+        <div id="container"></div>
+        <input type="submit" value="Submit"/>
+    }
+}
+<h2>@ViewBag.Message</h2>
+}
+
+</form>

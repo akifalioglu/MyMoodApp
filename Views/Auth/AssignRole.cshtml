@@ -1,0 +1,73 @@
+@{/*<form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="AssignRole">
+    <input type="text" name="txtUsername" placeholder="Üyeyi Seçiniz..."><br>
+    <select name="slcRole">
+        @{
+            for (int i = 0; i <  ViewBag.RoleList.Rows.Count; i++)
+            {
+                <option id="@ViewBag.RoleList.Rows[i]["id"]" value="@ViewBag.RoleList.Rows[i]["id"]">@ViewBag.RoleList.Rows[i]["name"]</option>
+            }
+        }
+    </select>
+    <input type="submit" value="Yetkiyi Ata">
+    
+</form>
+*/
+}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+    });
+    var statusCode;
+    function clickButton()
+    {
+        val1 = document.getElementById("txtUsername").value;
+
+    $.ajax({
+        type: "POST",
+        url: "@Url.Action("GetRole")",
+        data: {result: val1},
+        dataType: "json",
+        success: function (msg) {
+            console.log(msg.resultCode);
+            if(msg.resultCode==false)
+            {
+                if(document.getElementById("errorUsername") == null)
+                {
+                    var element = document.createElement("div");
+                    var elementContainer = document.getElementById("container");
+                    element.id="errorUsername";
+                    element.innerHTML="Böyle bir kullanıcı yok !";
+                    elementContainer.appendChild(element);
+                    //document.getElementById("errorUsername").innerHTML="Böyle bir kullanıcı yok !";
+                }
+            }
+            else
+            {
+                if(document.getElementById("errorUsername") !== null)
+                    document.getElementById("errorUsername").remove();
+
+                $('#roleId').val(msg.roleValue);
+            }
+        },
+        error: function (req, status, error) {
+            alert(error);
+        }
+    });
+
+    }
+</script>
+@model MoodApp.Models.RoleAttributesModel
+<h1>@ViewBag.Message</h1>
+<form method="post" asp-controller="Auth" asp-action="AssignRole" >
+    <b>Hangi kullanıcıya yetki atanacak :</b>  <br>
+    <input asp-for="txtUsername" data-val-required="Üye adı boş geçilemez !" onchange="clickButton()"> <br>
+    <span asp-validation-for="txtUsername"></span>
+    <div id="container"></div>
+    <br>
+    <select asp-for="roleId" asp-items=@Model.roles data-val-required="Rol seçimi boş geçilemez !"></select>
+    <span asp-validation-for="roleId"></span>
+    <br>
+    <button type="submit">Atama yap</button>
+</form>

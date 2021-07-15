@@ -15619,13 +15619,13 @@
   "RootNamespace": "MoodApp",
   "Documents": [
     {
-      "FilePath": "/var/www/MoodApp/Views/Auth/Update.cshtml",
-      "TargetPath": "Views\\Auth\\Update.cshtml",
+      "FilePath": "/var/www/MoodApp/Views/Shared/Error.cshtml",
+      "TargetPath": "Views\\Shared\\Error.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/var/www/MoodApp/Views/Shared/Error.cshtml",
-      "TargetPath": "Views\\Shared\\Error.cshtml",
+      "FilePath": "/var/www/MoodApp/Views/Question/UpdateQuestion.cshtml",
+      "TargetPath": "Views\\Question\\UpdateQuestion.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -15644,8 +15644,8 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/var/www/MoodApp/Views/Auth/UpdateQuestion.cshtml",
-      "TargetPath": "Views\\Auth\\UpdateQuestion.cshtml",
+      "FilePath": "/var/www/MoodApp/Views/Auth/Logout.cshtml",
+      "TargetPath": "Views\\Auth\\Logout.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -15654,23 +15654,23 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/var/www/MoodApp/Views/Auth/AssignRole.cshtml",
+      "TargetPath": "Views\\Auth\\AssignRole.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/var/www/MoodApp/Views/Auth/Dashboard.cshtml",
       "TargetPath": "Views\\Auth\\Dashboard.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/var/www/MoodApp/Views/Auth/Answer.cshtml",
-      "TargetPath": "Views\\Auth\\Answer.cshtml",
+      "FilePath": "/var/www/MoodApp/Views/Question/Answer.cshtml",
+      "TargetPath": "Views\\Question\\Answer.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/var/www/MoodApp/Views/Auth/Add.cshtml",
-      "TargetPath": "Views\\Auth\\Add.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/var/www/MoodApp/Views/Auth/Index.cshtml",
-      "TargetPath": "Views\\Auth\\Index.cshtml",
+      "FilePath": "/var/www/MoodApp/Views/Question/Add.cshtml",
+      "TargetPath": "Views\\Question\\Add.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -15679,8 +15679,18 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/var/www/MoodApp/Views/Question/Update.cshtml",
+      "TargetPath": "Views\\Question\\Update.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/var/www/MoodApp/Views/Shared/_Layout.cshtml",
       "TargetPath": "Views\\Shared\\_Layout.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/var/www/MoodApp/Views/Question/Test.cshtml",
+      "TargetPath": "Views\\Question\\Test.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -15696,6 +15706,11 @@
     {
       "FilePath": "/var/www/MoodApp/Views/_ViewStart.cshtml",
       "TargetPath": "Views\\_ViewStart.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/var/www/MoodApp/Views/Question/Index.cshtml",
+      "TargetPath": "Views\\Question\\Index.cshtml",
       "FileKind": "mvc"
     }
   ],
