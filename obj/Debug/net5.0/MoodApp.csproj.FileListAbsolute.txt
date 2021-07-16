@@ -67,3 +67,4 @@
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Question/Update.cshtml.g.cs
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Question/UpdateQuestion.cshtml.g.cs
 /var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Question/Test.cshtml.g.cs
+/var/www/MoodApp/obj/Debug/net5.0/Razor/Views/Auth/AddUser.cshtml.g.cs

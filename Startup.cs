@@ -82,6 +82,9 @@ namespace MoodApp
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Auth}/{action=AssignRole}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Auth}/{action=AddUser}/{id?}");
                     
                 endpoints.MapControllerRoute(
                     name: "default",

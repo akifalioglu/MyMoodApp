@@ -26,50 +26,58 @@ namespace MoodApp.Controllers
         public dynamic accesPagesAdmin(HttpContext context)
         {
             DataTable result;
+            DataTable accesList = new DataTable();
+            accesList.Columns.Add("role_id");
             result = db.listForDatatable("SELECT * FROM page_access");
             string pageName = context.Request.Path;
             for(int i=0 ; i < result.Rows.Count; i++)
             {
                 if(pageName.Contains(result.Rows[i]["page_name"].ToString()))
                 {
-                    try
-                    {
-                        if(Convert.ToInt32( context.Session.GetString("ses_role") ) != Convert.ToInt32( result.Rows[i]["role_id"]))
-                        {
-                            this.status=false;
-                            this.setSessions(context,("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
-                            return Redirect("../Auth/Login");
-                        }
-                    }
-                    catch(Exception err)
-                    {
-                        Console.WriteLine(err);
-                        this.status=false;
-                    }
+                    accesList.Rows.Add(result.Rows[i]["role_id"]);
                 }
             }
-        this.status=true;
-        return View();
-        
+            bool exists = accesList.AsEnumerable().Where(c => c.Field<string>("role_id").Equals(context.Session.GetString("ses_role"))).Count() > 0;
+            if(exists==false)
+            {
+                this.status=false;
+                this.setSessions(context,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return Redirect("../Auth/Login");
+            }
+            else
+            {
+                this.status=true;
+                return View();
+            }        
         }
         public bool accesPagesStatus(HttpContext context)
         {
             DataTable result;
+            DataTable accesList = new DataTable();
+            accesList.Columns.Add("role_id");
             result = db.listForDatatable("SELECT * FROM page_access");
             string pageName = context.Request.Path;
             Console.WriteLine(pageName);
             for(int i=0 ; i < result.Rows.Count; i++)
             {
 
-                if(pageName==result.Rows[i]["page_name"].ToString())
+                if(pageName.Contains(result.Rows[i]["page_name"].ToString()))
                 {
-                    if(Convert.ToInt32( context.Session.GetString("ses_role") ) != Convert.ToInt32( result.Rows[i]["role_id"]))
-                    {
-                        return false;
-                    }
+                    accesList.Rows.Add(result.Rows[i]["role_id"]);       
                 }
             }
-            return true;
+            bool exists = accesList.AsEnumerable().Where(c => c.Field<string>("role_id").Equals(context.Session.GetString("ses_role"))).Count() > 0;
+            if(exists==false)
+            {
+                this.status=false;
+                this.setSessions(context,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return this.status;
+            }
+            else
+            {
+                this.status=true;
+                return this.status;
+            }   
         }
         public void setSessions( HttpContext context, params (string name, object content)[] sessionName)
         {
