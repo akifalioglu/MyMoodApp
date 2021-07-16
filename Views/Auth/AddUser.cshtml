@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Http;
+@model MoodApp.Models.UsersModel;
+<form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="AddUser">
+        <h4>@ViewBag.Message</h4>
+        <br>
+        <label asp-for="txtUsername"></label> : <br>
+        <input asp-for="txtUsername" data-val-required="Üye adı boş geçilemez !" data-val-maxlength="Üye adı 255 karakterden fazla olamaz" data-val-minlength="Üye adı 5 karakterden az olamaz"> <br>
+        <span asp-validation-for="txtUsername"></span><br>
+
+        <label asp-for="txtPassword"></label> : <br>
+        <input asp-for="txtPassword" data-val-required="Şifre boş geçilemez !"> <br>
+        <span asp-validation-for="txtPassword"></span><br>
+
+        <label asp-for="roleId"></label> : <br><select asp-for="roleId" asp-items=@Model.roles data-val-required="Rol seçimi boş geçilemez !"></select>
+        <span asp-validation-for="roleId"></span>
+        <br><input type="submit" value="Submit"/>
+</form>

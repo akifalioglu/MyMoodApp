@@ -1,27 +1,21 @@
-    @using Microsoft.AspNetCore.Http;
-    <form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Login">
-        <table>
-            <h4>@Context.Session.GetString("ses_errorMesssage") </h4>
-            <h4>@Context.Session.GetString("ses_succesMesssage") </h4>
-            @{
-                Context.Session.Remove("ses_errorMesssage");
-                Context.Session.Remove("ses_succesMesssage");
-            }
+@using Microsoft.AspNetCore.Http;
+@model MoodApp.Models.UsersModel;
+<form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Login">
+        <h4>@Context.Session.GetString("ses_errorMessage") </h4>
+        <h4>@Context.Session.GetString("ses_succesMessage") </h4>
+        @{
+            Context.Session.Remove("ses_errorMessage");
+            Context.Session.Remove("ses_succesMessage");
+        }
+        <br>
+        <label asp-for="txtUsername"></label> : <br>
+        <input asp-for="txtUsername" data-val-required="Üye adı boş geçilemez !" data-val-minlength="Üye Adı 5 karakterden az olamaz "> <br>
+        <span asp-validation-for="txtUsername"></span><br>
 
-            <br>
-            <tr>
-                <td>Kullanıcı Adı: </td>
-                <td><input type="text" id="txtUsername" name="txtUsername" value="akif"/></td>
-            </tr>
-            <tr>
-                <td>Şifre: </td>
-                <td><input type="text" id="txtPassword" name="txtPassword" value="akif"/></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Submit"/></td>
-            </tr>
-        </table>
-    </form>
+        <label asp-for="txtPassword"></label> : <br>
+        <input asp-for="txtPassword" data-val-required="Şifre boş geçilemez !"> <br>
+        <span asp-validation-for="txtPassword"></span><br>
 
-    <h1>@ViewBag.Message</h1>
+        <input type="submit" value="Submit"/>
+</form>
+<h1>@ViewBag.Message</h1>

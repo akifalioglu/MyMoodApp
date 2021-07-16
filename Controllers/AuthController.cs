@@ -47,7 +47,7 @@ namespace MoodApp.Controllers
         {
             if (general.accesPagesStatus(HttpContext)==true)
             {
-                var vm = new RoleAttributesModel();
+                var vm = new UsersModel();
                 vm.roles = new List<SelectListItem>();
                 for (int i = 0; i < this.getRole().Rows.Count; i++)
                 {
@@ -57,7 +57,7 @@ namespace MoodApp.Controllers
             }
             else
             {
-                general.setSessions(HttpContext,("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
                 return Redirect("Login");
             }
         }
@@ -77,7 +77,7 @@ namespace MoodApp.Controllers
                     ViewBag.Message = "Olmayan bir kullanıcıya yetki atanamaz !";
                 }
                 ViewBag.RoleList=this.getRole();
-                                var vm = new Models.RoleAttributesModel();
+                                var vm = new Models.UsersModel();
                 vm.roles = new List<SelectListItem>();
                 for (int i = 0; i < this.getRole().Rows.Count; i++)
                 {
@@ -88,7 +88,7 @@ namespace MoodApp.Controllers
             }
             else
             {
-                general.setSessions(HttpContext,("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
                 return Redirect("Login");
             }
         }
@@ -116,8 +116,63 @@ namespace MoodApp.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            general.setSessions(HttpContext,("succesMesssage","Başarıyla çıkış yaptınız.."));
+            general.setSessions(HttpContext,("succesMessage","Başarıyla çıkış yaptınız.."));
             return Redirect("Login");
+
+        }
+
+        public IActionResult AddUser()
+        {
+            if(general.accesPagesStatus(HttpContext)==false)
+            {                                
+                general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return Redirect("Login");
+            }
+            else
+            {
+                var vm = new UsersModel();
+                vm.roles = new List<SelectListItem>();
+                for (int i = 0; i < this.getRole().Rows.Count; i++)
+                {
+                    vm.roles.Add(new SelectListItem() { Text = this.getRole().Rows[i]["name"].ToString(), Value =  this.getRole().Rows[i]["id"].ToString() });
+                }
+                return View(vm);
+            }
+        }
+        [HttpPost]
+        public IActionResult AddUser(string txtUsername,string txtPassword,int roleId)
+        {
+            if(general.accesPagesStatus(HttpContext)==false)
+            {                                
+                general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return Redirect("Login");
+            }
+            else
+            {
+                var vm = new UsersModel();
+                vm.roles = new List<SelectListItem>();
+                for (int i = 0; i < this.getRole().Rows.Count; i++)
+                {
+                    vm.roles.Add(new SelectListItem() { Text = this.getRole().Rows[i]["name"].ToString(), Value =  this.getRole().Rows[i]["id"].ToString() });
+                }
+
+                this.username=txtUsername;
+                this.password=txtPassword;
+
+                if(this.addUser(roleId)>0)
+                {
+                    Console.WriteLine("ddkmewfjkwe");
+                    string deger =txtUsername +" adlı kullanıcı eklendi.";
+                    ViewBag.Message = deger;
+                }
+                else
+                {
+                    general.setSessions(HttpContext,("ses_errorMessage","Bir hata oluştu !"));
+                }
+                
+                return View(vm);
+            }
+
         }
 
         private DataTable oneUserPasswordList()
@@ -150,9 +205,9 @@ namespace MoodApp.Controllers
         {
             return db.listForDatatable("SELECT * FROM roles");
         }
-        public RoleAttributesModel GetRole(string result)
+        public UsersModel GetRole(string result)
         {
-            RoleAttributesModel roles = new RoleAttributesModel();
+            UsersModel roles = new UsersModel();
 
             roles.Result = result;
             this.username=result;
@@ -174,6 +229,10 @@ namespace MoodApp.Controllers
         private int updateRole(int roleId)
         {
             return db.insertUpdateDelete("UPDATE users SET role = "+roleId+" WHERE id = "+this.userId+"");
+        }
+        private int addUser(int roleId)
+        {
+            return db.insertUpdateDelete(" INSERT INTO users (username, password, role) VALUES ('"+this.username+"', '"+this.password+"', "+roleId+")");
         }
 
     }

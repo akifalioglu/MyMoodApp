@@ -67,12 +67,12 @@ namespace MoodApp.Controllers
             {
                 if(this.deleteQuestionsAndOptions()>0)
                 {
-                    general.setSessions(HttpContext,("succesMesssage","Başarıyla silindi "));
+                    general.setSessions(HttpContext,("succesMessage","Başarıyla silindi "));
                     Response.Redirect("/Question/Update");
                 }
                 else
                 {
-                    general.setSessions(HttpContext,("errorMesssage","Böyle bir kayıt yok ! "));
+                    general.setSessions(HttpContext,("errorMessage","Böyle bir kayıt yok ! "));
                     Response.Redirect("/Question/Update");
                 }
             }
@@ -91,7 +91,7 @@ namespace MoodApp.Controllers
                 return View();
             }
             else
-                general.setSessions(HttpContext,("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
                 return Redirect("Login");
         }
         [HttpPost]
@@ -115,7 +115,7 @@ namespace MoodApp.Controllers
             }
             else
             {
-                general.setSessions(HttpContext,("errorMesssage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
                 return Redirect("../Login");
             }
 

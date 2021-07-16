@@ -15649,6 +15649,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/var/www/MoodApp/Views/Auth/AddUser.cshtml",
+      "TargetPath": "Views\\Auth\\AddUser.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/var/www/MoodApp/Views/Home/Privacy.cshtml",
       "TargetPath": "Views\\Home\\Privacy.cshtml",
       "FileKind": "mvc"
