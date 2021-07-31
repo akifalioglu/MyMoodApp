@@ -14,16 +14,18 @@
         inputElement.name = 'txtOption'+sayac;
         inputElement.id = 'txtOption'+sayac;
         inputElement.placeholder = 'Seçenek...';
-        inputElement.className ='ssss';
+        inputElement.className ='col-12 form-control';
 
         buttonElement.type="button";
         buttonElement.id="btn"+sayac;
         buttonElement.value="*Sil*";
+        buttonElement.className="btn btn-outline-danger btn-block btn-sm";
         buttonElement.setAttribute("onClick", `deleteElement(${sayac})`);
 
 
         textareaElement.name="txtDescription"+sayac;
         textareaElement.id="txtDescription"+sayac;
+        textareaElement.className ='col-12 form-control';
         textareaElement.placeholder="Açıklama...";
         
         hrElement.id="hr"+sayac;
@@ -45,37 +47,96 @@
         document.getElementById("txtOption"+id).remove();
     }
 </script>
-<form method="post" enctype="multipart/form-data" asp-controller="Question" asp-action="UpdateQuestion">
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Yazı Düzenleme</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Question</a></li>
+              <li class="breadcrumb-item active">UpdateQuestion</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Soru Düzenle</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <form method="post" enctype="multipart/form-data" asp-controller="Question" asp-action="UpdateQuestion">
+                <div class="card-body">
+                  @{
+                    bool viewbagErrorStatus = string.IsNullOrEmpty(ViewBag.ErrorMessage);
+                    bool viewbagSuccesStatus = string.IsNullOrEmpty(ViewBag.SuccesMessage);
+                    if (viewbagErrorStatus==false)
+                    {
+                      <div class="alert alert-danger alert-dismissible">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                          <h5><i class="icon fas fa-ban"></i> Uyarı !</h5>
+                          @ViewBag.ErrorMessage
+                      </div>   
+                    }
+                    
+                    if (viewbagSuccesStatus==false)
+                    {
+                      <div class="alert alert-success alert-dismissible">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                          <h5><i class="icon fas fa-check"></i> Başarılı !</h5>
+                          @ViewBag.SuccesMessage
+                      </div>   
+                    }
+                    
+                  }
+                  @{
+                    if(ViewBag.QuestionList is not null)
+                    {
+                        if(ViewBag.QuestionList.Rows.Count==0)
+                        {
+                            ViewBag.Message="Böyle bir kayıt yok...";
+                        }
+                        else
+                        {
+                            <textarea id="txtQuestion" name="txtQuestion">@ViewBag.QuestionList.Rows[0]["question"]</textarea><br>
+                            string optName;
+                            string btnName;
+                            string dscName;
+                            int sayac=1;
+                            for (int i = 0; i < ViewBag.QuestionList.Rows.Count; i++)
+                            {
+                                optName="txtOption"+@sayac;
+                                dscName="txtDescription"+@sayac;
+                                btnName="btn"+@sayac;
+                                <input type="text" class="col-12 form-control" name="@optName" id="@optName" placeholder="Seçenek..." value="@ViewBag.QuestionList.Rows[i]["answer"]"><br>
+                                <textarea class="txtOption" name="@dscName" id="@dscName" placeholder="Açıklama...">@ViewBag.QuestionList.Rows[i]["text"]</textarea><br>
+                                <input type="button" class="btn btn-outline-danger btn-block btn-sm" id="@btnName" value="*Sil*" onclick="deleteElement(@i)"><hr>
+                                sayac++;
+                            }
+                  <button type="button" onclick="addInput()" class="btn btn-outline-danger btn-block btn-sm" name="btnAdd">*Seçenek Ekle*</button>
+                  <div class="form-group">
+                    <div id="container" class="row"></div>
+                    <input name="files" value="null" type="hidden">
+                  </div>
+                                        <div class="card-footer">
+                  <input type="submit" class="btn btn-primary" value="Ekle">
+                </div>
+                        }
+                    }
+                    }
+                <!-- /.card-body -->
+              </form>
 
-@{
-if(ViewBag.QuestionList is not null)
-{
-    if(ViewBag.QuestionList.Rows.Count==0)
-    {
-        ViewBag.Message="Böyle bir kayıt yok...";
-    }
-    else
-    {
-        <textarea name="txtQuestion">@ViewBag.QuestionList.Rows[0]["question"]</textarea><button type="button" onclick="addInput()" name="btnAdd">*Seçenek Ekle*</button><br>
-        string optName;
-        string btnName;
-        string dscName;
-        int sayac=1;
-        for (int i = 0; i < ViewBag.QuestionList.Rows.Count; i++)
-        {
-            optName="txtOption"+@sayac;
-            dscName="txtDescription"+@sayac;
-            btnName="btn"+@sayac;
-            <input type="text" name="@optName" id="@optName" placeholder="Seçenek..." value="@ViewBag.QuestionList.Rows[i]["answer"]"><br>
-            <textarea name="@dscName" id="@dscName" placeholder="Açıklama...">@ViewBag.QuestionList.Rows[i]["text"]</textarea><br>
-            <input type="button" id="@btnName" value="*Sil*" onclick="deleteElement(@i)"><hr>
-            sayac++;
-        }
-        <div id="container"></div>
-        <input type="submit" value="Submit"/>
-    }
-}
-<h2>@ViewBag.Message</h2>
-}
 
-</form>
+            </div>
+            <!-- /.card -->
+            </div>

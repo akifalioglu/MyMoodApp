@@ -15,20 +15,24 @@
         inputElement.name = 'txtOption'+sayac;
         inputElement.id = 'txtOption'+sayac;
         inputElement.placeholder = 'Seçenek...';
-        inputElement.className ='ssss';
+        inputElement.className ='col-12 form-control';
 
         buttonElement.type="button";
         buttonElement.id="btn"+sayac;
         buttonElement.value="*Sil*";
+        buttonElement.className="btn btn-outline-danger btn-block btn-sm";
         buttonElement.setAttribute("onClick", `deleteElement(${sayac})`);
 
 
         textareaElement.name="txtDescription"+sayac;
         textareaElement.id="txtDescription"+sayac;
+        textareaElement.className ='col-12 form-control';
         textareaElement.placeholder="Açıklama...";
         
+
         hrElement.id="hr"+sayac;
         var container = document.getElementById('container');
+
 
 
         container.appendChild(inputElement);
@@ -45,19 +49,76 @@
         document.getElementById("hr"+id).remove();
     }
 
+</script>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Yazı Ekleme</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Question</a></li>
+              <li class="breadcrumb-item active">Add</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Soru Ekle</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <form method="post" asp-controller="Question" asp-action="Add">
+                <div class="card-body">
+                  @{
+                    bool viewbagErrorStatus = string.IsNullOrEmpty(ViewBag.ErrorMessage);
+                    bool viewbagSuccesStatus = string.IsNullOrEmpty(ViewBag.SuccesMessage);
+                    if (viewbagErrorStatus==false)
+                    {
+                      <div class="alert alert-danger alert-dismissible">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                          <h5><i class="icon fas fa-ban"></i> Uyarı !</h5>
+                          @ViewBag.ErrorMessage
+                      </div>   
+                    }
+                    
+                    if (viewbagSuccesStatus==false)
+                    {
+                      <div class="alert alert-success alert-dismissible">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                          <h5><i class="icon fas fa-check"></i> Başarılı !</h5>
+                          @ViewBag.SuccesMessage
+                      </div>   
+                    }
+                    
+                  }
+                  <div class="form-group">
+                    <textarea id="txtQuestion" name="txtQuestion">
+                        Place <em>some</em> <u>text</u> <strong>here</strong>
+                    </textarea>
+                  </div>
+                  <button type="button" onclick="addInput()" class="btn btn-outline-danger btn-block btn-sm" name="btnAdd">*Seçenek Ekle*</button>
+                  <div class="form-group">
+                    <div id="container" class="row"></div>
+                    <input name="files" value="null" type="hidden">
+                  </div>
+                </div>
+                <!-- /.card-body -->
 
-</script>   
-@{
-    if(ViewBag.Message != string.Empty)
-    {
-        <h2>@ViewBag.Message</h2>
-    }
-}
-<form method="post" enctype="multipart/form-data" asp-controller="Question" asp-action="Add">
-            Soru: <br>
-            <textarea name="txtQuestion">Soruyu yazınız....</textarea><button type="button" onclick="addInput()" name="btnAdd">*Seçenek Ekle*</button>
-            <br>
-            <div id="container"></div>
-            <input type="submit" value="Submit"/>
-            
-</form>
+                <div class="card-footer">
+                  <input type="submit" class="btn btn-primary" value="Ekle">
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+            </div>

@@ -1,7 +1,67 @@
 
-<h2>İşlem Yapacağınız Alan</h2>
+@{
+  
+  var user=ViewBag.UserCount;
+  var question=ViewBag.QuestionCount;
+  var scala=100/(user+question);
+  user= scala*user;
+  question=scala*question;
+}
+<script>
 
-<a href="/Question/Add">Ekleme Sayfası</a><br>
-<a href="/Question/Update">Silme ve Güncelleme Sayfası</a><br>
-<a href="AssignRole">Yetki ataması</a><br>
-<a href="AddUser">Yeni Kullanıcı Ekle</a>
+    var donutData = [
+      {
+        label: 'Üyeler',
+        data : @user,
+        color: '#3c8dbc'
+      },
+      {
+        label: 'Konular',
+        data : @question,
+        color: '#0073b7'
+      }
+    ]
+    
+</script>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Dashboard</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard v1</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="far fa-chart-bar"></i>
+                  Üye & Konu Dağılımı
+                </h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="donut-chart" style="height: 300px; padding: 0px; position: relative;"><canvas class="flot-base" width="487" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 487.5px; height: 300px;"></canvas><canvas class="flot-overlay" width="487" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 487.5px; height: 300px;"></canvas><span class="pieLabel" id="pieLabel0" style="position: absolute; top: 70px; left: 299.617px;"><div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">Series2<br>30%</div></span><span class="pieLabel" id="pieLabel1" style="position: absolute; top: 210px; left: 277.617px;"><div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">Series3<br>20%</div></span><span class="pieLabel" id="pieLabel2" style="position: absolute; top: 129px; left: 118.617px;"><div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">Series4<br>50%</div></span></div>
+              </div>
+              <!-- /.card-body-->
+            </div>

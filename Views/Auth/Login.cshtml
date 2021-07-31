@@ -1,21 +1,162 @@
 @using Microsoft.AspNetCore.Http;
 @model MoodApp.Models.UsersModel;
-<form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Login">
-        <h4>@Context.Session.GetString("ses_errorMessage") </h4>
-        <h4>@Context.Session.GetString("ses_succesMessage") </h4>
-        @{
-            Context.Session.Remove("ses_errorMessage");
-            Context.Session.Remove("ses_succesMessage");
+ @{
+   Layout=null;
+ }
+ <script>
+
+function testChanged()
+{
+  var testData = document.body.contains(document.getElementById("txtUsername-error"));
+  var txtUsername = document.getElementById("txtUsername");
+  var txtPassword = document.getElementById("txtPassword");
+  console.log(testData);
+  if(testData==true)
+    txtUsername.className="form-control is-invalid";
+  else
+    txtUsername.className="form-control is-valid";
+  if(txtPassword==true)
+    txtPassword.className="form-control is-invalid";
+  else
+    txtPassword.className="form-control is-valid";
+}
+</script>
+<style>
+  .field-validation-error {
+  color:red;
+  font-size: smaller;
+}</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Log in (v2)</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="../../index2.html" class="h1"><b>Mood </b>App</a>
+    </div>
+    <div class="card-body">
+      @{
+        string errorMessage = Context.Session.GetString("ses_errorMessage");
+        string succesMessage = Context.Session.GetString("ses_succesMessage");
+        Context.Session.Remove("ses_errorMessage");
+        Context.Session.Remove("ses_succesMessage");
+        bool errorStatus = string.IsNullOrEmpty(errorMessage);
+        bool succesStatus = string.IsNullOrEmpty(succesMessage);
+        bool viewbagStatus = string.IsNullOrEmpty(ViewBag.Message);
+        if(viewbagStatus==false)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  <h5><i class="icon fas fa-ban"></i> Uyarı !</h5>
+                  @ViewBag.Message
+            </div>
         }
-        <br>
-        <label asp-for="txtUsername"></label> : <br>
-        <input asp-for="txtUsername" data-val-required="Üye adı boş geçilemez !" data-val-minlength="Üye Adı 5 karakterden az olamaz "> <br>
-        <span asp-validation-for="txtUsername"></span><br>
+        if (errorStatus==false)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  <h5><i class="icon fas fa-ban"></i> Uyarı !</h5>
+                  @errorMessage
+            </div>
+        }
+        if (succesStatus==false)
+        {
+            <div class="alert alert-success alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  <h5><i class="icon fas fa-check"></i> Mesaj !</h5>
+                  @succesMessage
+            </div>
+        }
+      }
+      <p class="login-box-msg">Giriş Yapınız</p>
+      <form method="post" enctype="multipart/form-data" asp-controller="Auth" asp-action="Login">
+        <div class="input-group mb-3">
+          <input asp-for="txtUsername" value="akif" placeholder="Üye adı" onkeyup="this.onchange()" onchange="testChanged()" class="form-control" data-val-required="Üye adı boş geçilemez !" data-val-minlength="Üye Adı 5 karakterden az olamaz "> <br>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span asp-validation-for="txtUsername"></span><br>
+        </div>
+        <div class="input-group mb-3">
+          <input asp-for="txtPassword" value="akif" placeholder="Şifre" data-val-required="Şifre boş geçilemez" class="form-control" onkeyup="this.onchange()" onchange="testChanged()"> <br>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span asp-validation-for="txtPassword"></span><br>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                Beni hatırla
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">Giriş</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
 
-        <label asp-for="txtPassword"></label> : <br>
-        <input asp-for="txtPassword" data-val-required="Şifre boş geçilemez !"> <br>
-        <span asp-validation-for="txtPassword"></span><br>
+      <div class="social-auth-links text-center mt-2 mb-3">
+        <a href="#" class="btn btn-block btn-primary">
+          <i class="fab fa-facebook mr-2"></i> Facebook ile kayıt
+        </a>
+        <a href="#" class="btn btn-block btn-danger">
+          <i class="fab fa-google-plus mr-2"></i> Google ile kayıt
+        </a>
+      </div>
+      <!-- /.social-auth-links -->
 
-        <input type="submit" value="Submit"/>
-</form>
-<h1>@ViewBag.Message</h1>
+      <p class="mb-1">
+        <a href="forgot-password.html">Şifremi unuttum</a>
+      </p>
+      <p class="mb-0">
+        <a href="register.html" class="text-center">Yeni kayıt</a>
+      </p>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/dist/js/adminlte.min.js"></script>
+</body>
+</html>
+@{
+    <partial name="_ValidationScriptsPartial" />
+
+}
