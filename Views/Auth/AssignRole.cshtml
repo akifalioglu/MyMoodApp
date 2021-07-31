@@ -35,9 +35,10 @@
             {
                 if(document.getElementById("errorUsername") == null)
                 {
-                    var element = document.createElement("div");
+                    var element = document.createElement("p");
                     var elementContainer = document.getElementById("container");
                     element.id="errorUsername";
+                    element.className="text-danger";
                     element.innerHTML="Böyle bir kullanıcı yok !";
                     elementContainer.appendChild(element);
                     //document.getElementById("errorUsername").innerHTML="Böyle bir kullanıcı yok !";
@@ -59,15 +60,65 @@
     }
 </script>
 @model MoodApp.Models.UsersModel
-<h1>@ViewBag.Message</h1>
-<form method="post" asp-controller="Auth" asp-action="AssignRole" >
-    <b>Hangi kullanıcıya yetki atanacak :</b>  <br>
-    <input asp-for="txtUsername" data-val-required="Üye adı boş geçilemez !" onchange="clickButton()"> <br>
-    <span asp-validation-for="txtUsername"></span>
-    <div id="container"></div>
-    <br>
-    <select asp-for="roleId" asp-items=@Model.roles data-val-required="Rol seçimi boş geçilemez !"></select>
-    <span asp-validation-for="roleId"></span>
-    <br>
-    <button type="submit">Atama yap</button>
-</form>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Yetki Atama</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Auth</a></li>
+              <li class="breadcrumb-item active">AssignRole</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Yetkilendirilecek Kullanıcı</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <div class="card-body">
+                    @{
+                    if (ViewBag.ErrorMessage is string)
+                    {
+                      <div class="alert alert-danger alert-dismissible">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                          <h5><i class="icon fas fa-ban"></i> Uyarı !</h5>
+                          @ViewBag.ErrorMessage
+                      </div>   
+                    }
+                    
+                    if (ViewBag.SuccesMessage is string)
+                    {
+                      <div class="alert alert-success alert-dismissible">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                          <h5><i class="icon fas fa-check"></i> Başarılı !</h5>
+                          @ViewBag.SuccesMessage
+                      </div>   
+                    }
+              }
+                    <form method="post" asp-controller="Auth" asp-action="AssignRole" >
+                        <b>Hangi kullanıcıya yetki atanacak :</b>  <br>
+                        <input class="form-control" asp-for="txtUsername" data-val-required="Üye adı boş geçilemez !" onchange="clickButton()"> <br>
+                        <span asp-validation-for="txtUsername"></span>
+                        <div id="container"></div>
+                        <select asp-for="roleId" class="form-control" asp-items=@Model.roles data-val-required="Rol seçimi boş geçilemez !"></select>
+                        <span asp-validation-for="roleId"></span>
+                        <br>
+                        <button class="btn btn-block btn-outline-success" type="submit">Atama yap</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>

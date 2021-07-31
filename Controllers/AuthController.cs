@@ -40,7 +40,17 @@ namespace MoodApp.Controllers
         }        
         public IActionResult Dashboard()
         {
-            return general.accesPagesAdmin(HttpContext);
+            if (general.accesPagesStatus(HttpContext)==true)
+            {
+                ViewBag.UserCount= this.userCount();
+                ViewBag.QuestionCount = this.questionCount();
+                return View();
+            }
+            else
+            {
+                general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
+                return Redirect("../Auth/Login");
+            }
         }
 
         public IActionResult AssignRole()
@@ -58,7 +68,7 @@ namespace MoodApp.Controllers
             else
             {
                 general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
-                return Redirect("Login");
+                return Redirect("../Auth/Login");
             }
         }
         [HttpPost]
@@ -70,11 +80,11 @@ namespace MoodApp.Controllers
                 try{
                     this.userId=Convert.ToInt32( this.oneUserList().Rows[0]["id"] );
                     if(this.updateRole(roleId)==1)
-                        ViewBag.Message="Yetki başarıyla atandı !";
+                        ViewBag.SuccesMessage="Yetki başarıyla atandı !";
                 }
                 catch(IndexOutOfRangeException)
                 {
-                    ViewBag.Message = "Olmayan bir kullanıcıya yetki atanamaz !";
+                    ViewBag.ErrorMessage = "Olmayan bir kullanıcıya yetki atanamaz !";
                 }
                 ViewBag.RoleList=this.getRole();
                                 var vm = new Models.UsersModel();
@@ -89,7 +99,7 @@ namespace MoodApp.Controllers
             else
             {
                 general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
-                return Redirect("Login");
+                return Redirect("../Auth/Login");
             }
         }
        [HttpPost]
@@ -117,7 +127,7 @@ namespace MoodApp.Controllers
         {
             HttpContext.Session.Clear();
             general.setSessions(HttpContext,("succesMessage","Başarıyla çıkış yaptınız.."));
-            return Redirect("Login");
+            return Redirect("../Auth/Login");
 
         }
 
@@ -126,7 +136,7 @@ namespace MoodApp.Controllers
             if(general.accesPagesStatus(HttpContext)==false)
             {                                
                 general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
-                return Redirect("Login");
+                return Redirect("../Auth/Login");
             }
             else
             {
@@ -145,7 +155,7 @@ namespace MoodApp.Controllers
             if(general.accesPagesStatus(HttpContext)==false)
             {                                
                 general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
-                return Redirect("Login");
+                return Redirect("../Auth/Login");
             }
             else
             {
@@ -161,13 +171,13 @@ namespace MoodApp.Controllers
 
                 if(this.addUser(roleId)>0)
                 {
-                    Console.WriteLine("ddkmewfjkwe");
+                    Console.WriteLine("eklendi");
                     string deger =txtUsername +" adlı kullanıcı eklendi.";
-                    ViewBag.Message = deger;
+                    ViewBag.SuccesMessage=deger;
                 }
                 else
                 {
-                    general.setSessions(HttpContext,("ses_errorMessage","Bir hata oluştu !"));
+                    ViewBag.ErrorMessage ="Bir hata oluştu !";
                 }
                 
                 return View(vm);
@@ -233,6 +243,14 @@ namespace MoodApp.Controllers
         private int addUser(int roleId)
         {
             return db.insertUpdateDelete(" INSERT INTO users (username, password, role) VALUES ('"+this.username+"', '"+this.password+"', "+roleId+")");
+        }
+        public dynamic userCount()
+        {
+            return db.listForDatatable("SELECT count(*) FROM users").Rows[0][0];
+        }
+        private dynamic questionCount()
+        {
+            return db.listForDatatable("SELECT count(*) FROM questions").Rows[0][0];
         }
 
     }

@@ -92,7 +92,7 @@ namespace MoodApp.Controllers
             }
             else
                 general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
-                return Redirect("Login");
+                return Redirect("../Auth/Login");
         }
         [HttpPost]
         public IActionResult Add(IFormCollection formCollection)
@@ -116,7 +116,7 @@ namespace MoodApp.Controllers
             else
             {
                 general.setSessions(HttpContext,("errorMessage","Yetkisiz Erişim Engellendi. Lütfen yetkiniz olan sayfalara erişiniz.!"));
-                return Redirect("../Login");
+                return Redirect("../Auth/Login");
             }
 
         }
@@ -174,7 +174,7 @@ namespace MoodApp.Controllers
             int emptyValue=0;
             foreach(var form in formCollection)
             {
-                Console.WriteLine(form.Key);
+                Console.WriteLine(form.Key +" == "+form.Value);
                 if(form.Key.Contains("txtOption")==true)
                 {
                     counter++;
@@ -192,14 +192,13 @@ namespace MoodApp.Controllers
                     emptyValue++;
                 }
             }
-                            
             if(emptyValue>0)
             {
-                ViewBag.Message ="Tüm alanları doldurunuz";
+                ViewBag.ErrorMessage ="Tüm alanları doldurunuz";
             }
             else if(counter < 4 )
             {
-                ViewBag.Message="En az iki seçenek seçilmelidir.";
+                ViewBag.ErrorMessage="En az iki seçenek seçilmelidir.";
             }
             else
             {
@@ -227,13 +226,13 @@ namespace MoodApp.Controllers
 
                 //İşlem başarılı
                 db.mySqlTransaction.Commit();
-                ViewBag.Message = "Başarıyla eklendi...";
+                ViewBag.SuccesMessage = "Başarıyla eklendi...";
                 this.functionStatus=true;
             }
             catch(Exception err)
             {
                 db.stopTransaction(err);
-                ViewBag.Message = "Eklenirken hata oluştu.. Hata mesajı : "+err.Message;
+                ViewBag.ErrorMessage = "Eklenirken hata oluştu.. Hata mesajı : "+err.Message;
             }
         }
                 private void getQuestion()
